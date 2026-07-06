@@ -12,5 +12,8 @@ pub struct TemperatureHistory {
 
 pub struct Thermostat {
     pub target_temp: f32,
-    pub heater: u8,
+}
+
+pub struct HeaterMode {
+    pub heater_mode: f32,
 }

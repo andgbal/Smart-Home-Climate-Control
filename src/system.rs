@@ -1,22 +1,39 @@
 use std::collections::HashMap;
 use rand::Rng;
 
-pub fn climate_control_system(home: &mut SmartHome){
-    for (&room_id, sensor) in home.sensors.iter() {
-        if let some(thermostat) = home.thermostat.get_mut(&room_id){
-            if (sensor.current_temp - home.TemperatureHistory.get(-5)) < target_temp{
-                if thermostat.heater < 3{
-                    thermostat.heater += 1;
-                    println!("Room {}'s heater is turning ON to ${}", room_id, thermostat.heater);
-                } else {
-                    println!("Room {}'s heater is already operating at strongest mode!", room_id);
-                }
-            }
+use crate::home::SmartHome;
 
-            else{
-                if thermostat.heater > 0{
-                    thermostat.heater_on = 0;
-                    println!("Room {}'s heater is turning OFF!", room_id);
+pub fn climate_control_system(home: &mut SmartHome) {
+    for (&room_id, sensor) in home.sensors.iter() {
+        // Access both the thermostat AND the history for this room
+        if let (Some(thermostat), Some(history)) = (
+            home.thermostat.get_mut(&room_id), 
+            home.history.get(&room_id)
+        ) {
+            
+            // Calculate temperature trend (Current - 5 ticks ago)
+            let trend = if history.readings.len() >= 5 {
+                let last_temp = history.readings.last().unwrap().1;
+                let old_temp = history.readings[history.readings.len() - 5].1;
+                last_temp - old_temp
+            } else {
+                0.0 // Not enough data yet
+            };
+
+            // Now use the trend to adjust the heater
+            if trend < 0.0 { // Temp is dropping
+                if thermostat.heater_mode < 3 {
+                    thermostat.heater_mode += 1;
+                    println!("Room {}'s heater power increasing to {}!", room_id, thermostat.heater_mode);
+                }
+            } else if trend > 0.5 { // Temp is rising fast, turn it off
+                if thermostat.heater_mode > 0{
+                    thermostat.heater_mode -= 1;
+                    println!("Room {}'s heater power decreasing to {}!", room_id, thermostat.heater_mode);
+                }
+                else{
+                    thermostat.heater_mode = 0;
+                    println!("Room {}'s heater turning OFF!", room_id);
                 }
             }
         }
