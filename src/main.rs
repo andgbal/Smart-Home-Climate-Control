@@ -1,4 +1,5 @@
 mod world;
+mod component;
 use crate::component::TemperatureSensor;
 use crate::component::Thermostat;
 
