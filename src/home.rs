@@ -15,6 +15,8 @@ impl SmartHome {
         Self {
             sensors: HashMap::new(),
             thermostat: HashMap::new(),
+            heater_modes: HashMap::new(),
+            history: HashMap::map(),
         }
     }
 }
