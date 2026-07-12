@@ -15,5 +15,5 @@ pub struct Thermostat {
 }
 
 pub struct HeaterMode {
-    pub heater_mode: f32,
+    pub level: u8,
 }

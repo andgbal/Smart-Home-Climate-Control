@@ -1,0 +1,3 @@
+No entity deletion/despawn — real ECS needs a "generation" counter on ids to detect stale references after removal, which you haven't touched
+Sparse HashMap storage, not the archetype/dense-array layout real engines use for cache performance — fine for learning, wrong idea if you assumed this is what makes ECS fast
+No dynamic query flexibility (arbitrary combinations at runtime) — your queries are hand-written per combination, not generic
