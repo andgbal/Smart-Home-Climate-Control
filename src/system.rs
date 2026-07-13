@@ -67,7 +67,7 @@ pub fn climate_control_system(world: &mut World) {
         ) {
 
             if let Some((prev_tick, prev_temp)) = temperature_history.history.iter().rev().nth(1) {
-                if sensor.current_temp < *prev_temp {
+                if sensor.current_temp < thermostat.target_temp && sensor.current_temp < *prev_temp {
                     if heater_mode.level < 5{
                         heater_mode.level += 1;
                     }
